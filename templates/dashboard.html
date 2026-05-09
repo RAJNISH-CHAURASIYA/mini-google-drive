@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Dashboard | Mini Google Drive</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    ☰
+    <div class="search">My Drive</div>
+    👤 {{ request.user.username }}
+    <button onclick="toggleTheme()"
+        style="
+            margin-left:15px;
+            border:none;
+            background:transparent;
+            font-size:20px;
+            cursor:pointer;
+        "
+        id="themeBtn">
+    🌙
+</button>
+
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="/dashboard/">📁 My Drive</a>
+        <a href="/trash/">🗑 Trash</a>
+        <a href="/activity/">📊 Activity</a>
+        <a href="/accounts/logout/">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main" id="uploadSection">
+
+        <!-- CREATE FOLDER -->
+        <div class="card" style="max-width:400px; margin-bottom:20px;">
+            <h3>📁 Create Folder</h3>
+            <form method="post" action="/create-folder/">
+                {% csrf_token %}
+                <input type="text" name="folder_name" placeholder="Folder name" required>
+                <br><br>
+                <button>Create Folder</button>
+            </form>
+        </div>
+
+        <!-- UPLOAD FILE -->
+        <div class="card" style="max-width:400px; margin-bottom:30px;">
+            <h3>📤 Upload File</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="file" required>
+                <br><br>
+                <button>Upload</button>
+            </form>
+        </div>
+
+        <!-- ================= FOLDERS ================= -->
+        {% if folders %}
+        <h3>📁 Folders</h3>
+        <div class="grid">
+
+            {% for folder in folders %}
+            <div class="card folder-card">
+
+                <!-- CLICK TO OPEN -->
+                <a href="/folder/{{ folder.id }}/" style="text-decoration:none;">
+                    <div class="icon">📁</div>
+                    <div class="name">{{ folder.name }}</div>
+                </a>
+
+                <!-- 3 DOT MENU -->
+                <div class="menu-container">
+                    <span class="menu-btn">⋮</span>
+                    <div class="menu-dropdown">
+                        <a href="/folder-rename/{{ folder.id }}/">✏ Rename</a>
+                        <a href="/folder-delete/{{ folder.id }}/"
+                           class="danger"
+                           onclick="return confirm('Delete this folder?');">
+                           🗑 Delete
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+
+        <!-- ================= FILES ================= -->
+        <h3 style="margin-top:40px;">📄 Files</h3>
+
+        {% if files %}
+        <div class="grid">
+
+            {% for file in files %}
+            <div class="card file-card">
+
+                <div class="icon">📄</div>
+
+                <div class="name" title="{{ file.file.name }}">
+                    {{ file.file.name }}
+                </div>
+
+                <!-- 3 DOT MENU -->
+                <div class="menu-container">
+                    <span class="menu-btn">⋮</span>
+                    <div class="menu-dropdown">
+                        <a href="{{ file.file.url }}">⬇ Download</a>
+                        <a href="/share/{{ file.id }}/">🔗 Share</a>
+                        <a href="/delete/{{ file.id }}/" class="danger">🗑 Delete</a>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% else %}
+            <p>No files uploaded yet.</p>
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- FLOATING + BUTTON -->
+<a href="#uploadSection" class="floating-btn" title="Upload">+</a>
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+
+        if (document.body.classList.contains("dark-theme")) {
+            localStorage.setItem("theme", "dark");
+            document.getElementById("themeBtn").innerText = "☀️";
+        } else {
+            localStorage.setItem("theme", "light");
+            document.getElementById("themeBtn").innerText = "🌙";
+        }
+    }
+
+    // LOAD SAVED THEME
+    window.onload = function () {
+        let theme = localStorage.getItem("theme");
+        if (theme === "dark") {
+            document.body.classList.add("dark-theme");
+            document.getElementById("themeBtn").innerText = "☀️";
+        }
+    };
+</script>
+
+</body>
+</html>

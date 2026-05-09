@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File | Mini Google Drive</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    ☰
+    <div class="search">Upload to Mini Google Drive</div>
+    👤 {{ request.user.username }}
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="/dashboard/">📁 My Drive</a>
+        <a href="/my-files/">📄 My Files</a>
+        <a href="/trash/">🗑 Trash</a>
+        <a href="/activity/">📊 Activity</a>
+        <a href="/accounts/logout/">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main" id="uploadSection">
+
+        <h2 style="margin-bottom:20px;">📤 Upload File</h2>
+
+        <div class="card" style="max-width:420px;">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- FILE INPUT -->
+                <label style="font-size:14px; color:#9aa0a6;">Choose File</label>
+                <input 
+                    type="file" 
+                    name="file" 
+                    required 
+                    style="
+                        margin:15px 0 20px 0;
+                        width:100%;
+                        padding:10px;
+                        background:#303134;
+                        color:#e8eaed;
+                        border:none;
+                        border-radius:8px;
+                    "
+                >
+
+                <!-- BUTTONS -->
+                <div style="display:flex; gap:10px;">
+                    <button 
+                        type="submit" 
+                        style="
+                            flex:1;
+                            padding:10px;
+                            background:#1a73e8;
+                            color:#fff;
+                            border:none;
+                            border-radius:20px;
+                            font-weight:600;
+                            cursor:pointer;
+                        "
+                    >
+                        Upload
+                    </button>
+
+                    <a 
+                        href="/dashboard/" 
+                        style="
+                            flex:1;
+                            text-align:center;
+                            padding:10px;
+                            background:#5f6368;
+                            color:#fff;
+                            border-radius:20px;
+                            text-decoration:none;
+                            font-weight:600;
+                        "
+                    >
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔵 FLOATING + BUTTON -->
+<a 
+    href="#uploadSection" 
+    class="floating-btn" 
+    title="Upload File"
+>+</a>
+
+</body>
+</html>

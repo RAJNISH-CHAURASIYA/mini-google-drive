@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trash | Mini Google Drive</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="dark-theme">
+
+<!-- TOP BAR -->
+<div class="topbar">
+    ☰
+    <div class="search">Trash</div>
+
+    <!-- THEME TOGGLE -->
+    <span id="themeToggle" style="cursor:pointer; font-size:20px; margin-right:15px;">🌙</span>
+
+    👤 {{ request.user.username }}
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="/dashboard/">📁 My Drive</a>
+        <a href="/my-files/">📄 My Files</a>
+        <a href="/trash/" class="active">🗑 Trash</a>
+        <a href="/activity/">📊 Activity</a>
+        <a href="/accounts/logout/">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <h2 style="margin-bottom:20px;">🗑 Trash</h2>
+
+        {% if files %}
+        <div class="grid">
+
+            {% for file in files %}
+            <div class="card">
+
+                <div class="icon">📄</div>
+
+                <div class="name" title="{{ file.file.name }}">
+                    {{ file.file.name }}
+                </div>
+
+                <!-- 3 DOT MENU -->
+                <div class="menu-container">
+                    <span class="menu-btn">⋮</span>
+
+                    <div class="menu-dropdown">
+                        <a href="/restore/{{ file.id }}/">♻ Restore</a>
+                        <a href="/permanent-delete/{{ file.id }}/"
+                           class="danger"
+                           onclick="return confirm('Delete permanently?');">
+                            🗑 Delete Forever
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% else %}
+            <p>Trash is empty.</p>
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- THEME SCRIPT -->
+<script>
+    const body = document.body;
+    const toggle = document.getElementById("themeToggle");
+
+    if (localStorage.getItem("theme") === "light") {
+        body.classList.remove("dark-theme");
+        toggle.textContent = "🌞";
+    }
+
+    toggle.onclick = () => {
+        body.classList.toggle("dark-theme");
+
+        if (body.classList.contains("dark-theme")) {
+            toggle.textContent = "🌙";
+            localStorage.setItem("theme", "dark");
+        } else {
+            toggle.textContent = "🌞";
+            localStorage.setItem("theme", "light");
+        }
+    };
+</script>
+
+</body>
+</html>

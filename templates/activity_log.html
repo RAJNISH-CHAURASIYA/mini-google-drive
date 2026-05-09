@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Activity | Mini Google Drive</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="dark-theme" id="themeBody">
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div style="font-weight:600;">📊 Activity</div>
+
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button onclick="toggleTheme()" class="theme-btn">🌙</button>
+        👤 {{ request.user.username }}
+    </div>
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="/dashboard/">📁 My Drive</a>
+        <a href="/my-files/">📄 My Files</a>
+        <a href="/trash/">🗑 Trash</a>
+        <a href="/activity/">📊 Activity</a>
+        <a href="/accounts/logout/">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <h2 style="margin-bottom:20px;">Activity Log</h2>
+
+        {% for log in logs %}
+        <div class="activity-card">
+
+            <div class="activity-left">
+                <div class="activity-icon">⏱</div>
+
+                <div class="activity-content">
+                    <div class="activity-text">{{ log.action }}</div>
+                    <div class="activity-time">{{ log.timestamp }}</div>
+                </div>
+            </div>
+
+            <!-- 3 DOT MENU -->
+            <div class="menu-container">
+                <span class="menu-btn">⋮</span>
+
+                <div class="menu-dropdown">
+                    <a href="/activity-delete/{{ log.id }}/" class="danger"
+                       onclick="return confirm('Delete this activity?');">
+                        🗑 Delete
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <p>No activity found.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+<script>
+function toggleTheme() {
+    const body = document.getElementById("themeBody");
+    body.classList.toggle("dark-theme");
+    body.classList.toggle("light-theme");
+}
+</script>
+
+</body>
+</html>

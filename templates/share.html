@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Share | Mini Google Drive</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="dark-theme">
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div style="display:flex; align-items:center; gap:10px;">
+        🔗 Share
+    </div>
+
+    <div style="display:flex; gap:15px; align-items:center;">
+        <span id="themeToggle" style="cursor:pointer;">🌙</span>
+        👤 {{ request.user.username }}
+    </div>
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="/dashboard/">📁 My Drive</a>
+        <a href="/trash/">🗑 Trash</a>
+        <a href="/activity/">📊 Activity</a>
+        <a href="/accounts/logout/">🚪 Logout</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <h2>Share Link</h2>
+
+        <!-- SHARE CARD -->
+        <div class="card" style="max-width:600px;">
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+
+                <div>
+                    <strong>Anyone with this link can view</strong>
+                    <div style="font-size:13px; color:#9aa0a6;">
+                        Share this link to allow download
+                    </div>
+                </div>
+
+                <!-- 3 DOT MENU -->
+                <div class="menu-container">
+                    <span class="menu-btn">⋮</span>
+
+                    <div class="menu-dropdown">
+                        <a href="#" onclick="copyLink()">📋 Copy link</a>
+                        <a href="/dashboard/">↩ Back to Drive</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <input
+                type="text"
+                id="shareLink"
+                value="{{ share_url }}"
+                readonly
+                style="
+                    width:100%;
+                    margin-top:15px;
+                    padding:12px;
+                    border-radius:10px;
+                    border:none;
+                    background:#303134;
+                    color:#e8eaed;
+                "
+            >
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+/* COPY LINK */
+function copyLink() {
+    const input = document.getElementById("shareLink");
+    input.select();
+    document.execCommand("copy");
+    alert("Link copied!");
+}
+
+/* THEME TOGGLE */
+const body = document.body;
+const toggle = document.getElementById("themeToggle");
+
+if (localStorage.getItem("theme") === "light") {
+    body.classList.remove("dark-theme");
+    toggle.textContent = "🌞";
+}
+
+toggle.onclick = () => {
+    body.classList.toggle("dark-theme");
+    if (body.classList.contains("dark-theme")) {
+        toggle.textContent = "🌙";
+        localStorage.setItem("theme", "dark");
+    } else {
+        toggle.textContent = "🌞";
+        localStorage.setItem("theme", "light");
+    }
+};
+</script>
+
+</body>
+</html>
