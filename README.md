@@ -225,6 +225,6 @@ This project is developed for educational and learning purposes only.
 
 <p align="center">
 
-⭐ Thanks for visiting this repository ⭐
+⭐ Thanks for visiting this repository.⭐
 
 </p>
